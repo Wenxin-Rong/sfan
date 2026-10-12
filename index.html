@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SFAN: Seeing Farther to Act Now</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column (~760px) with figures and the video row allowed wider (~1080px). */
+:root{
+  --bg:#f6f8fa; --surface:#ffffff; --ink:#15212b; --muted:#566673; --line:#d7e0e7;
+  --accent:#2f7ea6; --accent-soft:#e3f0f7;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --read:720px; --wide:880px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --surface:#16212a; --ink:#e4ecf2; --muted:#9aabb8; --line:#2a3946;
+  --accent:#6ab8de; --accent-soft:#1b3243; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --surface:#16212a; --ink:#e4ecf2; --muted:#9aabb8; --line:#2a3946;
+  --accent:#6ab8de; --accent-soft:#1b3243; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.075rem;line-height:1.65;padding-inline:clamp(20px,6vw,96px);padding-block:0 64px}
+.wrap{max-width:var(--wide);margin-inline:auto}
+.read{max-width:var(--read);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+header{padding-block:72px 36px}
+.venue{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:700;letter-spacing:-.02em}
+h1 .acr{color:var(--accent)}
+.subtitle{font-family:var(--display);font-weight:500;font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--muted);margin-top:10px;max-width:46ch}
+.authors{margin-top:22px;font-size:1.05rem}
+.authors small{display:block;color:var(--muted);font-size:.95rem;margin-top:6px}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:500;font-size:.95rem;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn[aria-disabled="true"]{color:var(--muted);cursor:default}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+
+section{padding-block:56px 8px}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+h2{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
+h3{font-size:1.2rem;font-weight:700;margin:36px 0 10px}
+p{margin:0 0 1em}
+.abstract{font-size:1.12rem}
+
+figure{margin:24px 0 0}
+figure .frame{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}
+figcaption{font-size:.93rem;color:var(--muted);margin-top:10px;max-width:var(--read)}
+figcaption b{color:var(--ink);font-family:var(--display);font-weight:500}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:8px}
+.stat{background:var(--surface);padding:16px 18px}
+.stat .n{font-family:var(--display);font-weight:700;font-size:2rem;font-variant-numeric:tabular-nums}
+.stat .n small{font-size:1rem;color:var(--muted);font-weight:500}
+.stat .l{font-size:.85rem;color:var(--muted);line-height:1.4}
+
+.tablebox{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 12px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:none}
+th{font-family:var(--display);font-weight:500;color:var(--muted);font-size:.82rem;background:var(--bg)}
+td{font-family:var(--mono);font-size:.85rem}
+td.name,th.name{text-align:left;font-family:var(--body);font-size:.92rem}
+.ours{background:var(--accent-soft)}
+td.best{font-weight:500;color:var(--accent)}
+.bars td.bar{width:60%;padding-block:6px}
+.bar i{display:block;height:10px;border-radius:5px;background:var(--line)}
+.bars tr.ours .bar i{background:var(--accent)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.two>*{min-width:0}
+
+.videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+@media (max-width:760px){.videos{grid-template-columns:1fr}}
+.vid video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;border-radius:10px;background:#000;border:1px solid var(--line)}
+.vid.ours-vid video{border:2px solid var(--accent)}
+.authors a{color:var(--ink);text-decoration-color:var(--line);text-underline-offset:3px}
+.authors a:hover{color:var(--accent)}
+.vid .screen{aspect-ratio:16/9;max-width:100%;border-radius:10px;background:var(--surface);border:1px dashed var(--line);display:grid;place-items:center;text-align:center;color:var(--muted);font-family:var(--mono);font-size:.78rem;padding:12px}
+.vid .screen svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:1.6;margin-bottom:6px}
+.vid.ours-vid .screen{border:2px solid var(--accent)}
+.vid h4{font-family:var(--display);margin:10px 0 0;font-size:1rem;text-align:center}
+.vid.ours-vid h4{color:var(--accent)}
+
+pre.bib{font-family:var(--mono);font-size:.8rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.5}
+footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+@media (max-width:520px){header{padding-block:40px 24px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <h1><span class="acr">S</span>eeing <span class="acr">F</span>arther to <span class="acr">A</span>ct <span class="acr">N</span>ow</h1>
+  <div class="subtitle">Long-horizon future modeling for robot manipulation</div>
+  <div class="authors">
+    <a href="https://openreview.net/profile?id=~Wenxin_Rong1">Wenxin Rong</a><sup>1</sup>,
+    <a href="https://openreview.net/profile?id=~Haoxuan_Wang1">Haoxuan Wang</a><sup>1</sup>,
+    <a href="https://openreview.net/profile?id=~Feiran_Wang2">Feiran Wang</a><sup>1</sup>,
+    <a href="https://openreview.net/profile?id=~Yasutomo_Kawanishi1">Yasutomo Kawanishi</a><sup>2</sup>,
+    <a href="https://openreview.net/profile?id=~Yan_Yan6">Yan Yan</a><sup>1</sup>
+    <small><sup>1</sup>University of Illinois at Chicago &nbsp;&nbsp; <sup>2</sup>Ritsumeikan University</small>
+  </div>
+</header>
+
+<figure>
+  <div class="frame"><img src="img/fig1.jpg" alt="Motivation: short-horizon prediction picks a locally plausible but wrong target, long horizon reveals the correct one; success rate trends across prediction horizons"></div>
+  <figcaption><b>Motivation.</b> (a) When the prediction horizon is tied to the action chunk, a locally plausible but wrong target looks fine; a longer horizon exposes the downstream outcome. (b) Short horizons keep fine motion detail, long horizons show task progress. (c) The best horizon depends on the task.</figcaption>
+</figure>
+
+<section id="abstract" class="read">
+  <div class="eyebrow">Abstract</div>
+  <p class="abstract">World Action Models (WAMs) provide predictive context for robot manipulation by conditioning action generation on imagined future visual states. However, existing WAMs commonly couple the visual prediction horizon to the action horizon, restricting future information to the immediate interaction and potentially obscuring longer-term task consequences. We show that prediction horizon introduces a fundamental trade-off: short-horizon futures preserve fine-grained motion and interaction details, whereas longer-horizon futures capture broader task progression but with greater visual uncertainty, making the most useful temporal scale task dependent. Building on this insight, we propose Seeing Farther to Act Now (SFAN), a multi-timescale world-action model that decouples visual prediction from the executable action horizon and assigns complementary roles to different temporal scales. SFAN uses sparsely sampled long-horizon futures to provide broader task context and generate the primary action prediction, while a complementary short-horizon pathway densely samples nearby futures to predict a residual correction conditioned on the primary action. This asymmetric design allows longer-range futures to guide interaction selection while preserving the fine-grained local information needed to refine how the selected interaction is executed. Extensive experiments on simulated and real-world robot manipulation demonstrate that SFAN consistently outperforms existing baselines, with particularly strong gains on tasks that benefit from longer-horizon future context.</p>
+</section>
+
+<section id="method">
+  <div class="read">
+    <div class="eyebrow">Method</div>
+    <h2>Overview of SFAN</h2>
+  </div>
+  <figure>
+    <div class="frame"><img src="img/fig2.jpg" alt="SFAN architecture: shared video generation model with long- and short-horizon temporal modules, primary action DiT and residual DiT"></div>
+    <figcaption>Given the current observation and language instruction, the video generation model produces long- and short-horizon predictive representations using the same number of future tokens but different temporal strides. The sparsely sampled long-horizon representation captures broader task progression and conditions the action model to generate a primary action chunk. The densely sampled short-horizon representation preserves near-term interaction details and predicts a residual correction conditioned on the primary action. The final action chunk combines the two, giving long-horizon guidance with local refinement.</figcaption>
+  </figure>
+</section>
+
+<section id="results">
+  <div class="read">
+    <div class="eyebrow">Experiments</div>
+    <h2>Results</h2>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">69<small>%</small></div><div class="l">Avg. success on 24 RoboCasa tasks (best baseline 66%)</div></div>
+    <div class="stat"><div class="n">20.75<small>%</small></div><div class="l">Full-task success on 8 composite RoboCasa365 tasks (best baseline 11.75%)</div></div>
+    <div class="stat"><div class="n">40<small>%</small></div><div class="l">Two-Pen Retrieval on a real robot (best baseline 33%)</div></div>
+    <div class="stat"><div class="n">33<small>%</small></div><div class="l">Pen–Cup–Plate on a real robot (best baseline 13%)</div></div>
+  </div>
+
+  <h3>RoboCasa benchmark</h3>
+  <p class="read" style="margin-left:0">Average success over 24 household tasks on a 7-DoF Franka Panda, with 50 demonstrations per task and 50 rollouts per task.</p>
+  <div class="tablebox"><table class="bars">
+    <thead><tr><th class="name">Method</th><th class="name">Average success</th><th></th></tr></thead>
+    <tbody id="avg"></tbody>
+  </table></div>
+
+  <h3>Composite RoboCasa365 tasks</h3>
+  <p class="read" style="margin-left:0">Eight multi-stage tasks with 100 demonstrations each. SFAN leads from the first stage and keeps more rollouts on track in later stages.</p>
+  <figure>
+    <div class="frame"><img src="img/fig3.jpg" alt="Stage-wise success rates on eight composite RoboCasa tasks for GR00T N1.5, UVA, Cosmos-Policy and SFAN"></div>
+    <figcaption><b>Stage-wise success.</b> Full-task average: SFAN 20.75%, GR00T-N1.5 11.75%, Cosmos-Policy 9.25%, UVA 6.50%.</figcaption>
+  </figure>
+
+  <h3>Real-world experiments</h3>
+  <p class="read" style="margin-left:0">AgileX robot, 100 demonstrations per task, 15 rollouts per method under the same initial configurations.</p>
+  <div class="two">
+    <div class="tablebox" style="margin-top:0"><table>
+      <thead><tr><th class="name">Two-Pen Retrieval</th><th>First red</th><th>Second red</th><th>Full</th></tr></thead>
+      <tbody>
+        <tr><td class="name">GR00T-N1.5</td><td>0.40</td><td>0.20</td><td>0.13</td></tr>
+        <tr><td class="name">Cosmos-Policy</td><td>0.60</td><td>0.33</td><td>0.33</td></tr>
+        <tr class="ours"><td class="name"><b>SFAN</b></td><td class="best">0.73</td><td class="best">0.47</td><td class="best">0.40</td></tr>
+      </tbody></table></div>
+    <div class="tablebox" style="margin-top:0"><table>
+      <thead><tr><th class="name">Pen–Cup–Plate</th><th>Pen grasp</th><th>Cup grasp</th><th>Full</th></tr></thead>
+      <tbody>
+        <tr><td class="name">GR00T-N1.5</td><td>0.67</td><td>0.20</td><td>0.07</td></tr>
+        <tr><td class="name">Cosmos-Policy</td><td>0.53</td><td>0.13</td><td>0.13</td></tr>
+        <tr class="ours"><td class="name"><b>SFAN</b></td><td class="best">0.87</td><td class="best">0.47</td><td class="best">0.33</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<section id="videos">
+  <div class="read">
+    <div class="eyebrow">Videos</div>
+    <h2>Real-world rollouts</h2>
+  </div>
+  <div class="videos">
+    <div class="vid">
+      <video src="videos/groot.mp4" autoplay muted loop playsinline controls preload="auto"></video>
+      <h4>GR00T-N1.5</h4>
+    </div>
+    <div class="vid">
+      <video src="videos/cosmos_policy.mp4" autoplay muted loop playsinline controls preload="auto"></video>
+      <h4>Cosmos-Policy</h4>
+    </div>
+    <div class="vid ours-vid">
+      <video src="videos/sfan.mp4" autoplay muted loop playsinline controls preload="auto"></video>
+      <h4>SFAN (Ours)</h4>
+    </div>
+  </div>
+</section>
+
+<section id="cite" class="read">
+  <div class="eyebrow">Citation</div>
+  <h2>BibTeX</h2>
+<pre class="bib">@misc{rong2026sfan,
+  title     = {Seeing Farther to Act Now: Long-Horizon Future
+               Modeling for Robot Manipulation},
+  author    = {Rong, Wenxin and Wang, Haoxuan and Wang, Feiran and
+               Kawanishi, Yasutomo and Yan, Yan},
+  year      = {2026}
+}</pre>
+</section>
+
+<footer class="read">SFAN · Seeing Farther to Act Now</footer>
+</div>
+
+<script>
+(function(){
+  var d=[["DP-ResNet",.41],["DP-CLIP",.41],["GR00T-N1",.50],["FPV",.51],["DP-VLA",.59],["UVA",.50],["Video Policy",.57],["RoboTales",.64],["Cosmos Policy",.66],["SFAN (Ours)",.69]];
+  document.getElementById("avg").innerHTML=d.map(function(r,i){
+    var o=i===d.length-1;
+    return '<tr'+(o?' class="ours"':'')+'><td class="name">'+(o?'<b>'+r[0]+'</b>':r[0])+'</td><td'+(o?' class="best"':'')+'>'+Math.round(r[1]*100)+'%</td><td class="bar"><i style="width:'+(r[1]*100)+'%"></i></td></tr>';
+  }).join("");
+})();
+</script>
+
+</body>
+</html>
